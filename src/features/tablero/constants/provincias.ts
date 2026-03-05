@@ -1,0 +1,28 @@
+import type { SelectOption } from "@/features/tablero/types";
+
+export const PROVINCIAS: SelectOption[] = [
+  { id: "bue", label: "Buenos Aires" },
+  { id: "cat", label: "Catamarca" },
+  { id: "cha", label: "Chaco" },
+  { id: "chu", label: "Chubut" },
+  { id: "cba", label: "Córdoba" },
+  { id: "cor", label: "Corrientes" },
+  { id: "ere", label: "Entre Ríos" },
+  { id: "for", label: "Formosa" },
+  { id: "juj", label: "Jujuy" },
+  { id: "lpa", label: "La Pampa" },
+  { id: "lri", label: "La Rioja" },
+  { id: "men", label: "Mendoza" },
+  { id: "mis", label: "Misiones" },
+  { id: "neu", label: "Neuquén" },
+  { id: "rne", label: "Río Negro" },
+  { id: "sal", label: "Salta" },
+  { id: "sju", label: "San Juan" },
+  { id: "slu", label: "San Luis" },
+  { id: "scr", label: "Santa Cruz" },
+  { id: "sfe", label: "Santa Fe" },
+  { id: "sde", label: "Santiago del Estero" },
+  { id: "tie", label: "Tierra del Fuego" },
+  { id: "tuc", label: "Tucumán" },
+  { id: "caba", label: "Ciudad Autónoma de Buenos Aires" },
+];
