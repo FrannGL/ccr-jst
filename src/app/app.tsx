@@ -1,7 +1,7 @@
+import { AppRouter } from "@/router/app-router";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Footer } from "@/components/custom/footer/Footer";
 import { Navbar } from "@/components/custom/navbar/navbar";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { AppRouter } from "@/router/app-router";
 
 function App() {
   return (

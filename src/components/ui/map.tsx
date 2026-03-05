@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import { createPortal } from 'react-dom';
-import { X, Plus, Minus, Locate, Loader2, Maximize } from 'lucide-react';
-import MapLibreGL, { type PopupOptions, type MarkerOptions } from 'maplibre-gl';
+import { createPortal } from "react-dom";
+import { X, Plus, Minus, Locate, Loader2, Maximize } from "lucide-react";
+import MapLibreGL, { type PopupOptions, type MarkerOptions } from "maplibre-gl";
 import {
-  useId,
   useRef,
   useMemo,
   useState,
@@ -15,27 +14,31 @@ import {
   createContext,
   type ReactNode,
   useImperativeHandle,
-} from 'react';
-import 'maplibre-gl/dist/maplibre-gl.css';
+} from "react";
+import "maplibre-gl/dist/maplibre-gl.css";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 // Check document class for theme (works with next-themes, etc.)
 function getDocumentTheme(): Theme | null {
-  if (typeof document === 'undefined') return null;
-  if (document.documentElement.classList.contains('dark')) return 'dark';
-  if (document.documentElement.classList.contains('light')) return 'light';
+  if (typeof document === "undefined") return null;
+  if (document.documentElement.classList.contains("dark")) return "dark";
+  if (document.documentElement.classList.contains("light")) return "light";
   return null;
 }
 
 // Get system preference
 function getSystemTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (typeof window === "undefined") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
-function useResolvedTheme(themeProp?: 'light' | 'dark'): 'light' | 'dark' {
-  const [detectedTheme, setDetectedTheme] = useState<'light' | 'dark'>(() => getDocumentTheme() ?? getSystemTheme());
+function useResolvedTheme(themeProp?: "light" | "dark"): "light" | "dark" {
+  const [detectedTheme, setDetectedTheme] = useState<"light" | "dark">(
+    () => getDocumentTheme() ?? getSystemTheme(),
+  );
 
   useEffect(() => {
     if (themeProp) return; // Skip detection if theme is provided via prop
@@ -49,22 +52,22 @@ function useResolvedTheme(themeProp?: 'light' | 'dark'): 'light' | 'dark' {
     });
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class'],
+      attributeFilter: ["class"],
     });
 
     // Also watch for system preference changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleSystemChange = (e: MediaQueryListEvent) => {
       // Only use system preference if no document class is set
       if (!getDocumentTheme()) {
-        setDetectedTheme(e.matches ? 'dark' : 'light');
+        setDetectedTheme(e.matches ? "dark" : "light");
       }
     };
-    mediaQuery.addEventListener('change', handleSystemChange);
+    mediaQuery.addEventListener("change", handleSystemChange);
 
     return () => {
       observer.disconnect();
-      mediaQuery.removeEventListener('change', handleSystemChange);
+      mediaQuery.removeEventListener("change", handleSystemChange);
     };
   }, [themeProp]);
 
@@ -81,19 +84,19 @@ const MapContext = createContext<MapContextValue | null>(null);
 function useMap() {
   const context = useContext(MapContext);
   if (!context) {
-    throw new Error('useMap must be used within a Map component');
+    throw new Error("useMap must be used within a Map component");
   }
   return context;
 }
 
 const defaultStyles = {
-  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+  dark: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+  light: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
 };
 
 type MapStyleOption = string | MapLibreGL.StyleSpecification;
 
-type Theme = 'light' | 'dark';
+type Theme = "light" | "dark";
 
 type MapProps = {
   children?: ReactNode;
@@ -109,7 +112,7 @@ type MapProps = {
   };
   /** Map projection type. Use `{ type: "globe" }` for 3D globe view. */
   projection?: MapLibreGL.ProjectionSpecification;
-} & Omit<MapLibreGL.MapOptions, 'container' | 'style'>;
+} & Omit<MapLibreGL.MapOptions, "container" | "style">;
 
 type MapRef = MapLibreGL.Map;
 
@@ -155,7 +158,8 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const initialStyle = resolvedTheme === 'dark' ? mapStyles.dark : mapStyles.light;
+    const initialStyle =
+      resolvedTheme === "dark" ? mapStyles.dark : mapStyles.light;
     currentStyleRef.current = initialStyle;
 
     const map = new MapLibreGL.Map({
@@ -182,14 +186,14 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     };
     const loadHandler = () => setIsLoaded(true);
 
-    map.on('load', loadHandler);
-    map.on('styledata', styleDataHandler);
+    map.on("load", loadHandler);
+    map.on("styledata", styleDataHandler);
     setMapInstance(map);
 
     return () => {
       clearStyleTimeout();
-      map.off('load', loadHandler);
-      map.off('styledata', styleDataHandler);
+      map.off("load", loadHandler);
+      map.off("styledata", styleDataHandler);
       map.remove();
       setIsLoaded(false);
       setIsStyleLoaded(false);
@@ -201,7 +205,8 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   useEffect(() => {
     if (!mapInstance || !resolvedTheme) return;
 
-    const newStyle = resolvedTheme === 'dark' ? mapStyles.dark : mapStyles.light;
+    const newStyle =
+      resolvedTheme === "dark" ? mapStyles.dark : mapStyles.light;
 
     if (currentStyleRef.current === newStyle) return;
 
@@ -241,7 +246,7 @@ const MarkerContext = createContext<MarkerContextValue | null>(null);
 function useMarkerContext() {
   const context = useContext(MarkerContext);
   if (!context) {
-    throw new Error('Marker components must be used within MapMarker');
+    throw new Error("Marker components must be used within MapMarker");
   }
   return context;
 }
@@ -265,7 +270,7 @@ type MapMarkerProps = {
   onDrag?: (lngLat: { lng: number; lat: number }) => void;
   /** Callback when marker drag ends (requires draggable: true) */
   onDragEnd?: (lngLat: { lng: number; lat: number }) => void;
-} & Omit<MarkerOptions, 'element'>;
+} & Omit<MarkerOptions, "element">;
 
 function MapMarker({
   longitude,
@@ -285,7 +290,7 @@ function MapMarker({
   const marker = useMemo(() => {
     const markerInstance = new MapLibreGL.Marker({
       ...markerOptions,
-      element: document.createElement('div'),
+      element: document.createElement("div"),
       draggable,
     }).setLngLat([longitude, latitude]);
 
@@ -293,9 +298,13 @@ function MapMarker({
     const handleMouseEnter = (e: MouseEvent) => onMouseEnter?.(e);
     const handleMouseLeave = (e: MouseEvent) => onMouseLeave?.(e);
 
-    markerInstance.getElement()?.addEventListener('click', handleClick);
-    markerInstance.getElement()?.addEventListener('mouseenter', handleMouseEnter);
-    markerInstance.getElement()?.addEventListener('mouseleave', handleMouseLeave);
+    markerInstance.getElement()?.addEventListener("click", handleClick);
+    markerInstance
+      .getElement()
+      ?.addEventListener("mouseenter", handleMouseEnter);
+    markerInstance
+      .getElement()
+      ?.addEventListener("mouseleave", handleMouseLeave);
 
     const handleDragStart = () => {
       const lngLat = markerInstance.getLngLat();
@@ -310,9 +319,9 @@ function MapMarker({
       onDragEnd?.({ lng: lngLat.lng, lat: lngLat.lat });
     };
 
-    markerInstance.on('dragstart', handleDragStart);
-    markerInstance.on('drag', handleDrag);
-    markerInstance.on('dragend', handleDragEnd);
+    markerInstance.on("dragstart", handleDragStart);
+    markerInstance.on("drag", handleDrag);
+    markerInstance.on("dragend", handleDragEnd);
 
     return markerInstance;
 
@@ -331,7 +340,10 @@ function MapMarker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
-  if (marker.getLngLat().lng !== longitude || marker.getLngLat().lat !== latitude) {
+  if (
+    marker.getLngLat().lng !== longitude ||
+    marker.getLngLat().lat !== latitude
+  ) {
     marker.setLngLat([longitude, latitude]);
   }
   if (marker.isDraggable() !== draggable) {
@@ -340,7 +352,9 @@ function MapMarker({
 
   const currentOffset = marker.getOffset();
   const newOffset = markerOptions.offset ?? [0, 0];
-  const [newOffsetX, newOffsetY] = Array.isArray(newOffset) ? newOffset : [newOffset.x, newOffset.y];
+  const [newOffsetX, newOffsetY] = Array.isArray(newOffset)
+    ? newOffset
+    : [newOffset.x, newOffset.y];
   if (currentOffset.x !== newOffsetX || currentOffset.y !== newOffsetY) {
     marker.setOffset(newOffset);
   }
@@ -349,13 +363,17 @@ function MapMarker({
     marker.setRotation(markerOptions.rotation ?? 0);
   }
   if (marker.getRotationAlignment() !== markerOptions.rotationAlignment) {
-    marker.setRotationAlignment(markerOptions.rotationAlignment ?? 'auto');
+    marker.setRotationAlignment(markerOptions.rotationAlignment ?? "auto");
   }
   if (marker.getPitchAlignment() !== markerOptions.pitchAlignment) {
-    marker.setPitchAlignment(markerOptions.pitchAlignment ?? 'auto');
+    marker.setPitchAlignment(markerOptions.pitchAlignment ?? "auto");
   }
 
-  return <MarkerContext.Provider value={{ marker, map }}>{children}</MarkerContext.Provider>;
+  return (
+    <MarkerContext.Provider value={{ marker, map }}>
+      {children}
+    </MarkerContext.Provider>
+  );
 }
 
 type MarkerContentProps = {
@@ -369,13 +387,17 @@ function MarkerContent({ children, className }: MarkerContentProps) {
   const { marker } = useMarkerContext();
 
   return createPortal(
-    <div className={cn('relative cursor-pointer', className)}>{children || <DefaultMarkerIcon />}</div>,
+    <div className={cn("relative cursor-pointer", className)}>
+      {children || <DefaultMarkerIcon />}
+    </div>,
     marker.getElement(),
   );
 }
 
 function DefaultMarkerIcon() {
-  return <div className="relative h-4 w-4 rounded-full border-2 border-white bg-blue-500 shadow-lg" />;
+  return (
+    <div className="relative h-4 w-4 rounded-full border-2 border-white bg-blue-500 shadow-lg" />
+  );
 }
 
 type MarkerPopupProps = {
@@ -385,11 +407,16 @@ type MarkerPopupProps = {
   className?: string;
   /** Show a close button in the popup (default: false) */
   closeButton?: boolean;
-} & Omit<PopupOptions, 'className' | 'closeButton'>;
+} & Omit<PopupOptions, "className" | "closeButton">;
 
-function MarkerPopup({ children, className, closeButton = false, ...popupOptions }: MarkerPopupProps) {
+function MarkerPopup({
+  children,
+  className,
+  closeButton = false,
+  ...popupOptions
+}: MarkerPopupProps) {
   const { marker, map } = useMarkerContext();
-  const container = useMemo(() => document.createElement('div'), []);
+  const container = useMemo(() => document.createElement("div"), []);
   const prevPopupOptions = useRef(popupOptions);
 
   const popup = useMemo(() => {
@@ -398,7 +425,7 @@ function MarkerPopup({ children, className, closeButton = false, ...popupOptions
       ...popupOptions,
       closeButton: false,
     })
-      .setMaxWidth('none')
+      .setMaxWidth("none")
       .setDOMContent(container);
 
     return popupInstance;
@@ -424,7 +451,7 @@ function MarkerPopup({ children, className, closeButton = false, ...popupOptions
       popup.setOffset(popupOptions.offset ?? 16);
     }
     if (prev.maxWidth !== popupOptions.maxWidth && popupOptions.maxWidth) {
-      popup.setMaxWidth(popupOptions.maxWidth ?? 'none');
+      popup.setMaxWidth(popupOptions.maxWidth ?? "none");
     }
 
     prevPopupOptions.current = popupOptions;
@@ -435,7 +462,7 @@ function MarkerPopup({ children, className, closeButton = false, ...popupOptions
   return createPortal(
     <div
       className={cn(
-        'relative rounded-md border bg-popover p-3 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95',
+        "relative rounded-md border bg-popover p-3 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95",
         className,
       )}
     >
@@ -458,7 +485,7 @@ function MarkerPopup({ children, className, closeButton = false, ...popupOptions
 
 type MapControlsProps = {
   /** Position of the controls on the map (default: "bottom-right") */
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   /** Show zoom in/out buttons (default: true) */
   showZoom?: boolean;
   /** Show compass button to reset bearing (default: false) */
@@ -474,10 +501,10 @@ type MapControlsProps = {
 };
 
 const positionClasses = {
-  'top-left': 'top-2 left-2',
-  'top-right': 'top-2 right-2',
-  'bottom-left': 'bottom-2 left-2',
-  'bottom-right': 'bottom-10 right-2',
+  "top-left": "top-2 left-2",
+  "top-right": "top-2 right-2",
+  "bottom-left": "bottom-2 left-2",
+  "bottom-right": "bottom-10 right-2",
 };
 
 function ControlGroup({ children }: { children: React.ReactNode }) {
@@ -505,8 +532,8 @@ function ControlButton({
       aria-label={label}
       type="button"
       className={cn(
-        'flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors',
-        disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
+        "flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors",
+        disabled && "opacity-50 pointer-events-none cursor-not-allowed",
       )}
       disabled={disabled}
     >
@@ -516,7 +543,7 @@ function ControlButton({
 }
 
 function MapControls({
-  position = 'bottom-right',
+  position = "bottom-right",
   showZoom = true,
   showCompass = false,
   showLocate = false,
@@ -541,7 +568,7 @@ function MapControls({
 
   const handleLocate = useCallback(() => {
     setWaitingForLocation(true);
-    if ('geolocation' in navigator) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const coords = {
@@ -557,7 +584,7 @@ function MapControls({
           setWaitingForLocation(false);
         },
         (error) => {
-          console.error('Error getting location:', error);
+          console.error("Error getting location:", error);
           setWaitingForLocation(false);
         },
       );
@@ -575,7 +602,13 @@ function MapControls({
   }, [map]);
 
   return (
-    <div className={cn('absolute z-10 flex flex-col gap-1.5', positionClasses[position], className)}>
+    <div
+      className={cn(
+        "absolute z-10 flex flex-col gap-1.5",
+        positionClasses[position],
+        className,
+      )}
+    >
       {showZoom && (
         <ControlGroup>
           <ControlButton onClick={handleZoomIn} label="Zoom in">
@@ -593,8 +626,16 @@ function MapControls({
       )}
       {showLocate && (
         <ControlGroup>
-          <ControlButton onClick={handleLocate} label="Find my location" disabled={waitingForLocation}>
-            {waitingForLocation ? <Loader2 className="size-4 animate-spin" /> : <Locate className="size-4" />}
+          <ControlButton
+            onClick={handleLocate}
+            label="Find my location"
+            disabled={waitingForLocation}
+          >
+            {waitingForLocation ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Locate className="size-4" />
+            )}
           </ControlButton>
         </ControlGroup>
       )}
@@ -624,13 +665,13 @@ function CompassButton({ onClick }: { onClick: () => void }) {
       compass.style.transform = `rotateX(${pitch}deg) rotateZ(${-bearing}deg)`;
     };
 
-    map.on('rotate', updateRotation);
-    map.on('pitch', updateRotation);
+    map.on("rotate", updateRotation);
+    map.on("pitch", updateRotation);
     updateRotation();
 
     return () => {
-      map.off('rotate', updateRotation);
-      map.off('pitch', updateRotation);
+      map.off("rotate", updateRotation);
+      map.off("pitch", updateRotation);
     };
   }, [map]);
 
@@ -640,7 +681,7 @@ function CompassButton({ onClick }: { onClick: () => void }) {
         ref={compassRef}
         viewBox="0 0 24 24"
         className="size-5 transition-transform duration-200"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: "preserve-3d" }}
       >
         <path d="M12 2L16 12H12V2Z" className="fill-red-500" />
         <path d="M12 2L8 12H12V2Z" className="fill-red-300" />
@@ -651,12 +692,12 @@ function CompassButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-export {
-  Map,
-  MapMarker,
-  MarkerContent,
-  MarkerPopup,
-  MapControls,
-};
+export { Map, MapMarker, MarkerPopup, MapControls, MarkerContent };
 
-export type { MapProps, MapMarkerProps, MarkerContentProps, MarkerPopupProps, MapControlsProps };
+export type {
+  MapProps,
+  MapMarkerProps,
+  MarkerPopupProps,
+  MapControlsProps,
+  MarkerContentProps,
+};
