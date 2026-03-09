@@ -18,7 +18,7 @@ export function TableroFilters({ values, onChange }: TableroFiltersProps) {
       onChange({ ...values, [key]: val });
 
   return (
-    <div className="mt-5">
+    <div className="w-full mt-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
         <SelectFilter
           label="Modo de Transporte"

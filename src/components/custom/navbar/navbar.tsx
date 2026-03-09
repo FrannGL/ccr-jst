@@ -9,7 +9,7 @@ export function Navbar() {
     <header className="w-full border-b bg-white">
       <div className="w-full">
         <div className="flex items-center justify-between">
-          <div className="flex items-center app-container py-3">
+          <div className="flex items-center app-container-wide py-3">
             <Link to="/" className="flex items-center space-x-2">
               <img
                 src={logoArgentina}

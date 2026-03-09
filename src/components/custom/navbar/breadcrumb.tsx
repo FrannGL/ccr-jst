@@ -1,7 +1,7 @@
 export function Breadcrumb() {
   return (
     <div className="bg-[#333] border-t-[3px] border-[#e7ba61]">
-      <div className="w-full app-container">
+      <div className="w-full app-container-wide">
         <nav className="flex items-center space-x-1 sm:space-x-2 py-1.5 text-xs font-medium flex-wrap">
           <a
             href="https://www.argentina.gob.ar/economia"

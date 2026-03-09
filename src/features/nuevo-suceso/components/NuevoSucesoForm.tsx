@@ -75,10 +75,16 @@ function NuevoSucesoFormContent() {
             variant="outline"
             onClick={handlePrevStep}
             disabled={currentStep === 1}
+            className="bg-jst-500 hover:bg-jst-600 text-white"
           >
             ← Anterior
           </Button>
-          <Button type="button" variant="outline" onClick={saveDraft}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={saveDraft}
+            className="border-jst-500 text-jst-500 hover:bg-jst-500 hover:text-white"
+          >
             Guardar Borrador
           </Button>
           <ClearFormDialog
