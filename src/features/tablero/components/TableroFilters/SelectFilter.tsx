@@ -1,4 +1,4 @@
-import type { SelectOption } from "@/features/tablero/types";
+import type { SelectOption } from "@/types";
 
 import { Field, FieldLabel } from "@/components/ui/field";
 import {

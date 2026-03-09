@@ -8,7 +8,9 @@ function App() {
     <TooltipProvider>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <Navbar />
-        <AppRouter />
+        <main className="flex-1">
+          <AppRouter />
+        </main>
         <Footer />
       </div>
     </TooltipProvider>

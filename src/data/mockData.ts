@@ -1,4 +1,4 @@
-import type { Paginacion } from "@/types";
+import type { Paginacion } from "@/features/tablero/types/paginacion";
 
 export interface Evento {
   id: number;

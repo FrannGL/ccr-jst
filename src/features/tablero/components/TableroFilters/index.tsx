@@ -1,10 +1,6 @@
-import type { TableroFiltersState } from "@/features/tablero/types";
+import { MODOS_JST, PROVINCIAS, TIPOS_RESPUESTA } from "@/constants";
 
-import {
-  PROVINCIAS,
-  TIPOS_RESPUESTA,
-  MODOS_TRANSPORTE,
-} from "@/features/tablero/constants";
+import type { TableroFiltersState } from "../../types/tablero-filter-state";
 
 import { SelectFilter } from "./SelectFilter";
 import { DateRangeFilter } from "./DateRangeFilter";
@@ -28,7 +24,7 @@ export function TableroFilters({ values, onChange }: TableroFiltersProps) {
           label="Modo de Transporte"
           placeholder="Todos los modos"
           value={values.modoTransporte}
-          options={MODOS_TRANSPORTE}
+          options={MODOS_JST}
           onChange={set("modoTransporte")}
         />
 

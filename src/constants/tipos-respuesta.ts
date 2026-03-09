@@ -1,4 +1,4 @@
-import type { SelectOption } from "@/features/tablero/types";
+import type { SelectOption } from "@/types";
 
 export const TIPOS_RESPUESTA: SelectOption[] = [
   { id: "intervencion", label: "Intervención" },

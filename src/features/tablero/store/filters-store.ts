@@ -1,8 +1,7 @@
 import { create } from "zustand";
 
-import type { TableroFiltersState } from "@/features/tablero/types";
-
 import type { FiltersStore } from "./types";
+import type { TableroFiltersState } from "../types/tablero-filter-state";
 
 const initialState: TableroFiltersState = {
   modoTransporte: "",

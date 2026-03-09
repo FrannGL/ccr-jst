@@ -1,14 +1,15 @@
 import { SearchX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   flexRender,
   useReactTable,
   type ColumnDef,
   getCoreRowModel,
   type SortingState,
+  type VisibilityState,
 } from "@tanstack/react-table";
 
-import type { Paginacion } from "@/types";
+import type { Paginacion } from "@/features/tablero/types/paginacion";
 
 import {
   Table,
@@ -32,6 +33,7 @@ export interface DataTableProps<TData, TValue> {
   onPageChange?: (page: number) => void;
   emptyMessage?: string;
   mobileCardConfig?: MobileCardConfig | null;
+  columnVisibility?: VisibilityState;
 }
 
 export function DataTable<TData, TValue>({
@@ -41,8 +43,15 @@ export function DataTable<TData, TValue>({
   onPageChange,
   emptyMessage = "No se encontraron resultados",
   mobileCardConfig = null,
+  columnVisibility = {},
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [visibility, setVisibility] =
+    useState<VisibilityState>(columnVisibility);
+
+  useEffect(() => {
+    setVisibility(columnVisibility);
+  }, [columnVisibility]);
 
   const currentPage = paginas?.actual || 1;
   const totalPages = paginas?.max || 1;
@@ -79,8 +88,10 @@ export function DataTable<TData, TValue>({
         pageIndex: currentPage - 1,
         pageSize,
       },
+      columnVisibility: visibility,
     },
     onSortingChange: setSorting,
+    onColumnVisibilityChange: setVisibility,
     pageCount: totalPages,
   });
 

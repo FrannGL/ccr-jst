@@ -1,1 +1,1 @@
-export type * from "./paginacion";
+export type * from "./select-option";

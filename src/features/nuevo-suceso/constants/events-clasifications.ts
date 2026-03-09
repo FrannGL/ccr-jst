@@ -1,0 +1,42 @@
+export const eventClassificationsByMode = {
+  automotor: [
+    "Colisión con Vehículo",
+    "Falla Mecánica",
+    "Salida de Ruta",
+    "Incidente con Peatón",
+    "Incendio",
+    "Otro",
+  ],
+  aeronautico: [
+    "Falla de Motor en Vuelo",
+    "Incidente en Pista",
+    "Colisión en Tierra",
+    "Pérdida de Comunicaciones",
+    "Emergencia Médica",
+    "Otro",
+  ],
+  ferroviario: [
+    "Descarrilamiento",
+    "Colisión con Obstáculo",
+    "Falla de Frenos",
+    "Incidente en Paso a Nivel",
+    "Problemas de Señalización",
+    "Otro",
+  ],
+  maritimo: [
+    "Varadura",
+    "Incendio a Bordo",
+    "Falla de Propulsión",
+    "Colisión con Otro Vehículo",
+    "Hombre al Agua",
+    "Otro",
+  ],
+  multimodal: [
+    "Incidente en Transferencia",
+    "Daño en Carga",
+    "Retraso en Conexión",
+    "Pérdida de Documentación",
+    "Problemas Aduaneros",
+    "Otro",
+  ],
+};

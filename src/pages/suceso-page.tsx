@@ -43,7 +43,7 @@ export function SucesoPage() {
   const suceso = mockSuceso;
 
   return (
-    <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 2xl:px-90 mx-auto">
+    <div className="app-container pb-12">
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row gap-4 mb-5 pt-10">
           <Link to="/" className="w-fit inline-block">

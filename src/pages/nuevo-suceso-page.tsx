@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NuevoSucesoForm } from "@/features/tablero/components/NuevoSucesoForm";
+import { NuevoSucesoForm } from "@/features/nuevo-suceso/components/NuevoSucesoForm";
 
 export function NuevoSucesoPage() {
   useEffect(() => {
@@ -12,7 +12,7 @@ export function NuevoSucesoPage() {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="app-container py-8">
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row gap-4 mb-5">
           <Link to="/" className="w-fit inline-block">
@@ -32,9 +32,7 @@ export function NuevoSucesoPage() {
       <Separator />
 
       <div className="mt-8">
-        <NuevoSucesoForm
-          onSaveDraft={() => console.log("Guardando borrador...")}
-        />
+        <NuevoSucesoForm />
       </div>
     </div>
   );

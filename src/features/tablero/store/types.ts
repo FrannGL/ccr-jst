@@ -1,4 +1,4 @@
-import type { TableroFiltersState } from "@/features/tablero/types";
+import type { TableroFiltersState } from "../types/tablero-filter-state";
 
 export interface FiltersStore {
   filters: TableroFiltersState;

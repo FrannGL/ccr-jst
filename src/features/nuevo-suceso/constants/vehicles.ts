@@ -1,0 +1,36 @@
+export const vehicleTypesByMode = {
+  aeronautico: [
+    "Comercial",
+    "Aeroplano",
+    "Helicóptero",
+    "Planeador",
+    "Drone/VANT",
+    "Otro",
+  ],
+  automotor: [
+    "Acoplado",
+    "Ambulancia",
+    "Moto",
+    "Auto",
+    "Colectivo",
+    "Camión",
+    "Utilitario",
+    "Otro",
+  ],
+  ferroviario: [
+    "Locomotora",
+    "Vagón de Pasajeros",
+    "Vagón de Carga",
+    "Autovía",
+    "Otro",
+  ],
+  maritimo: [
+    "Buque de Carga",
+    "Buque de Pasajeros",
+    "Pesquero",
+    "Embarcación Deportiva",
+    "Remolcador",
+    "Otro",
+  ],
+  multimodal: ["Camión", "Contenedor", "Vagón", "Otro"],
+};

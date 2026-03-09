@@ -1,12 +1,21 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { useNavigate } from "react-router-dom";
 import { Mail, Phone, Radio, Monitor, ExternalLink } from "lucide-react";
 
 import type { Evento } from "@/data/mockData";
 
-import { DataTable } from "@/components/custom/DataTable";
-import { mockEventos, mockPaginacion } from "@/data/mockData";
+// ----------------- UTILS ----------------------
+
+const getCanalIcon = (canal: string) => {
+  const icons = {
+    "E-mail Corporativo": <Mail className="w-4 h-4" />,
+    "Llamada 911": <Phone className="w-4 h-4" />,
+    "Radio Operativa": <Radio className="w-4 h-4" />,
+    "Portal Web": <Monitor className="w-4 h-4" />,
+  };
+
+  return icons[canal as keyof typeof icons] || <Mail className="w-4 h-4" />;
+};
 
 const getModoBadge = (modo: string) => {
   const variants = {
@@ -55,18 +64,9 @@ const getRespuestaBadge = (respuesta: string) => {
   );
 };
 
-const getCanalIcon = (canal: string) => {
-  const icons = {
-    "E-mail Corporativo": <Mail className="w-4 h-4" />,
-    "Llamada 911": <Phone className="w-4 h-4" />,
-    "Radio Operativa": <Radio className="w-4 h-4" />,
-    "Portal Web": <Monitor className="w-4 h-4" />,
-  };
+// ----------------- COLUMNS ----------------------
 
-  return icons[canal as keyof typeof icons] || <Mail className="w-4 h-4" />;
-};
-
-const createColumns = (
+export const createColumns = (
   navigate: (path: string) => void,
 ): ColumnDef<Evento, unknown>[] => [
   {
@@ -82,7 +82,7 @@ const createColumns = (
     accessorKey: "modo",
     header: "Modo",
     cell: ({ row }) => (
-      <div className="min-w-[140px]">{getModoBadge(row.getValue("modo"))}</div>
+      <div className="min-w-35">{getModoBadge(row.getValue("modo"))}</div>
     ),
   },
   {
@@ -90,7 +90,7 @@ const createColumns = (
     header: "Ubicación",
     cell: ({ row }) => (
       <div
-        className="text-slate-600 truncate text-sm max-w-[180px] lg:max-w-[250px] xl:max-w-xs"
+        className="text-slate-600 truncate text-sm max-w-45 lg:max-w-62.5 xl:max-w-xs"
         title={row.getValue("ubicacion")}
       >
         {row.getValue("ubicacion")}
@@ -101,7 +101,7 @@ const createColumns = (
     accessorKey: "tipo",
     header: "Tipo",
     cell: ({ row }) => (
-      <div className="text-slate-600 text-sm min-w-[120px]">
+      <div className="text-slate-600 text-sm min-w-30">
         {row.getValue("tipo")}
       </div>
     ),
@@ -110,7 +110,7 @@ const createColumns = (
     accessorKey: "canalNotificacion",
     header: "Canal",
     cell: ({ row }) => (
-      <div className="flex items-center gap-2 text-slate-600 text-sm min-w-[150px]">
+      <div className="flex items-center gap-2 text-slate-600 text-sm min-w-37.5">
         {getCanalIcon(row.getValue("canalNotificacion"))}
         <span className="truncate">{row.getValue("canalNotificacion")}</span>
       </div>
@@ -120,7 +120,7 @@ const createColumns = (
     accessorKey: "tipoRespuesta",
     header: "Respuesta",
     cell: ({ row }) => (
-      <div className="min-w-[120px]">
+      <div className="min-w-30">
         {getRespuestaBadge(row.getValue("tipoRespuesta"))}
       </div>
     ),
@@ -140,33 +140,3 @@ const createColumns = (
     ),
   },
 ];
-
-export function EjemploDataTable() {
-  const navigate = useNavigate();
-  const columns = createColumns(navigate);
-
-  const handlePageChange = (page: number) => {
-    console.log("Cambiando a página:", page);
-  };
-
-  return (
-    <div className="space-y-6">
-      <DataTable
-        columns={columns}
-        data={mockEventos}
-        paginas={mockPaginacion}
-        onPageChange={handlePageChange}
-        emptyMessage="No se encontraron incidentes"
-        mobileCardConfig={{
-          header: { left: "fecha", right: "modo" },
-          body: [
-            { label: "Ubicación", columnId: "ubicacion" },
-            { label: "Tipo", columnId: "tipo" },
-            { label: "Canal", columnId: "canalNotificacion" },
-          ],
-          footer: "tipoRespuesta",
-        }}
-      />
-    </div>
-  );
-}
