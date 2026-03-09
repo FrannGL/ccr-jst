@@ -45,6 +45,11 @@ export function NuevoSucesoProvider({ children }: { children: ReactNode }) {
     console.log("Guardando borrador (Context):", values);
   };
 
+  const clearForm = () => {
+    form.reset(initialValues);
+    setCurrentStep(1);
+  };
+
   const value: NuevoSucesoContextType = {
     form,
     currentStep,
@@ -53,6 +58,7 @@ export function NuevoSucesoProvider({ children }: { children: ReactNode }) {
     prevStep,
     onSubmit,
     saveDraft,
+    clearForm,
     steps,
   };
 

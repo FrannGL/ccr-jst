@@ -1,7 +1,11 @@
+import type MapLibreGL from "maplibre-gl";
+
 import { MapPin } from "lucide-react";
+import { useRef, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AddressAutocomplete } from "@/components/custom/address-autocomplete";
 import {
   Map,
   MapMarker,
@@ -10,18 +14,25 @@ import {
   MarkerContent,
 } from "@/components/ui/map";
 
+import type { AddressSuggestion } from "../../types";
+
 import { useNuevoSuceso } from "../../context/NuevoSucesoContext";
 
 export function LocationStep() {
   const { form } = useNuevoSuceso();
+  const mapRef = useRef<MapLibreGL.Map | null>(null);
+  const [coordinatesSetByAutocomplete, setCoordinatesSetByAutocomplete] =
+    useState(false);
 
   const {
     register,
     watch,
+    setValue,
     formState: { errors },
   } = form;
 
   const lugar = watch("lugar");
+  const direccion = watch("direccion");
   const latitud = watch("latitud");
   const longitud = watch("longitud");
 
@@ -31,9 +42,43 @@ export function LocationStep() {
     !isNaN(parseFloat(latitud.toString())) &&
     !isNaN(parseFloat(longitud.toString()));
 
+  const handleAddressSelect = (address: AddressSuggestion) => {
+    setValue("direccion", address.display_name);
+    setValue("latitud", address.lat);
+    setValue("longitud", address.lon);
+    setCoordinatesSetByAutocomplete(true);
+
+    if (mapRef.current) {
+      mapRef.current.flyTo({
+        center: [address.lon, address.lat],
+        zoom: 16,
+        duration: 1500,
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Referencia */}
+      <div>
+        <Label
+          htmlFor="direccion"
+          className="text-sm font-medium text-gray-700 mb-2 block"
+        >
+          Dirección
+        </Label>
+        <AddressAutocomplete
+          value={direccion || ""}
+          onChange={(value) => setValue("direccion", value)}
+          onSelectAddress={handleAddressSelect}
+          placeholder="Ej: Av. Corrientes 1000, Buenos Aires..."
+        />
+        {errors.direccion && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.direccion.message}
+          </p>
+        )}
+      </div>
+
       <div>
         <Label
           htmlFor="lugar"
@@ -51,27 +96,6 @@ export function LocationStep() {
         )}
       </div>
 
-      {/* Dirección */}
-      <div>
-        <Label
-          htmlFor="direccion"
-          className="text-sm font-medium text-gray-700 mb-2 block"
-        >
-          Dirección
-        </Label>
-        <Input
-          id="direccion"
-          placeholder="Ej: Av. Principal #123, Col. Centro..."
-          {...register("direccion")}
-        />
-        {errors.direccion && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.direccion.message}
-          </p>
-        )}
-      </div>
-
-      {/* Coordenadas */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label
@@ -85,7 +109,14 @@ export function LocationStep() {
             placeholder="Ej: -34.6037"
             type="number"
             step="any"
+            disabled={coordinatesSetByAutocomplete}
+            className={
+              coordinatesSetByAutocomplete
+                ? "cursor-not-allowed! opacity-60"
+                : ""
+            }
             {...register("latitud", { valueAsNumber: true })}
+            onChange={() => setCoordinatesSetByAutocomplete(false)}
           />
           {errors.latitud && (
             <p className="text-red-500 text-sm mt-1">
@@ -106,7 +137,14 @@ export function LocationStep() {
             placeholder="Ej: -58.3816"
             type="number"
             step="any"
+            disabled={coordinatesSetByAutocomplete}
+            className={
+              coordinatesSetByAutocomplete
+                ? "cursor-not-allowed! opacity-60"
+                : ""
+            }
             {...register("longitud", { valueAsNumber: true })}
+            onChange={() => setCoordinatesSetByAutocomplete(false)}
           />
           {errors.longitud && (
             <p className="text-red-500 text-sm mt-1">
@@ -116,7 +154,6 @@ export function LocationStep() {
         </div>
       </div>
 
-      {/* Mapa */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -127,6 +164,7 @@ export function LocationStep() {
 
         <div className="h-64 rounded-lg overflow-hidden border">
           <Map
+            ref={mapRef}
             center={
               hasCoordinates
                 ? [

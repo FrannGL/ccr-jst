@@ -1,4 +1,5 @@
 import { AppRouter } from "@/router/app-router";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Footer } from "@/components/custom/footer/Footer";
 import { Navbar } from "@/components/custom/navbar/navbar";
@@ -12,6 +13,7 @@ function App() {
           <AppRouter />
         </main>
         <Footer />
+        <Toaster />
       </div>
     </TooltipProvider>
   );
